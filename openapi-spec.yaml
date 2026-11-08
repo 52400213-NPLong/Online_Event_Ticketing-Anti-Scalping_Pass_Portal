@@ -1,0 +1,158 @@
+openapi: 3.1.0
+info:
+  title: Online Event Ticketing & Anti-Scalping Pass Portal API
+  description: REST API specification for event ticketing, concurrency seat locking, dynamic TOTP pass generation, and gate check-in verification.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local Development Server
+
+paths:
+  /reservations:
+    post:
+      summary: Lock a seat temporarily during checkout
+      operationId: createReservationLock
+      tags:
+        - Ticketing & Reservations
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, seatId]
+              properties:
+                eventId:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                seatId:
+                  type: string
+                  example: "A-12"
+      responses:
+        '201':
+          description: Seat lock acquired successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservationId:
+                    type: string
+                    format: uuid
+                  seatId:
+                    type: string
+                  status:
+                    type: string
+                    example: "LOCKED"
+                  expiresAt:
+                    type: string
+                    format: date-time
+                  lockDurationSeconds:
+                    type: integer
+                    example: 300
+        '409':
+          description: Collision error - Seat is already locked or booked by another user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Seat A-12 is currently locked by another transaction."
+
+  /tickets/{ticketId}/pass-token:
+    get:
+      summary: Retrieve dynamic time-based QR token (Anti-Scalping)
+      operationId: getDynamicPassToken
+      tags:
+        - Digital Wallet Pass
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dynamic QR token generated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticketId:
+                    type: string
+                    format: uuid
+                  totpToken:
+                    type: string
+                    example: "849201"
+                  expiresInSeconds:
+                    type: integer
+                    example: 10
+        '403':
+          description: Forbidden - User does not own this ticket.
+
+  /gate/check-in:
+    post:
+      summary: Gate scanner API to verify dynamic QR code and check-in attendee
+      operationId: gateCheckIn
+      tags:
+        - Gate Scanner & Security
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ticketId, totpToken]
+              properties:
+                ticketId:
+                  type: string
+                  format: uuid
+                totpToken:
+                  type: string
+                  example: "849201"
+      responses:
+        '200':
+          description: Ticket verified and check-in recorded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "CHECK_IN_SUCCESSFUL"
+                  attendeeName:
+                    type: string
+                    example: "Nguyen Van A"
+                  checkedInAt:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid/expired QR code or ticket already used.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "ALREADY_CHECKED_IN_WARNING"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
