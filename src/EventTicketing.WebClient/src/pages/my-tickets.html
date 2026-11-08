@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ví Vé Điện Tử - Anti-Scalping Pass</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .ticket-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 320px; }
+        .qr-box { background: #e5e7eb; padding: 20px; border-radius: 8px; font-weight: bold; font-family: monospace; word-break: break-all; margin: 16px 0; }
+        .timer { color: #dc2626; font-size: 14px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="ticket-card">
+        <h2>Vé Xem Đại Nhạc Hội X</h2>
+        <p><strong>Người sở hữu:</strong> Nguyen Van A</p>
+        <p><strong>Ghế:</strong> A-15 (VIP)</p>
+        <div class="qr-box" id="qrTokenDisplay">Đang tải mã QR...</div>
+        <div class="timer">Mã QR tự động đổi sau: <span id="countdown">30</span>s</div>
+    </div>
+
+    <script>
+        let timeLeft = 30;
+        function updateDynamicQr() {
+            // Giả lập token tạo từ Backend DynamicQrService
+            const dummyToken = btoa(Date.now().toString()).substring(0, 16);
+            document.getElementById('qrTokenDisplay').innerText = "DYNAMIC_QR_" + dummyToken;
+            timeLeft = 30;
+        }
+
+        setInterval(() => {
+            timeLeft--;
+            document.getElementById('countdown').innerText = timeLeft;
+            if (timeLeft <= 0) {
+                updateDynamicQr();
+            }
+        }, 1000);
+
+        updateDynamicQr();
+    </script>
+</body>
+</html>

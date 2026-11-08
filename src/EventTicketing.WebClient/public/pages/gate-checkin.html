@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gate Check-in | Pass Portal</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-badge">P</span>
+          <span>Pass Portal</span>
+        </a>
+
+        <nav class="nav">
+          <a href="index.html">Trang chủ</a>
+          <a href="seat-selection.html">Chọn ghế</a>
+          <a href="my-tickets.html">Ví vé</a>
+          <a href="gate-checkin.html">Cổng check-in</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="btn btn-secondary">Staff Portal</button>
+          <button class="btn btn-primary">Scan ngay</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Gate Scanner</div>
+            <h2>Check-in tại cổng</h2>
+          </div>
+          <div class="status-pill">● Hệ thống sẵn sàng</div>
+        </div>
+
+        <div class="gate-layout">
+          <div class="scan-box">
+            <div class="scan-placeholder">Camera / QR Scanner</div>
+          </div>
+
+          <div class="panel">
+            <h3>Thông tin vé</h3>
+
+            <div class="form-field">
+              <label for="ticketId">Ticket ID</label>
+              <input id="ticketId" type="text" value="TCK-4821" />
+            </div>
+
+            <div class="form-field">
+              <label for="userId">User ID</label>
+              <input id="userId" type="text" value="USER-1001" />
+            </div>
+
+            <div class="form-field">
+              <label for="token">Dynamic token</label>
+              <input id="token" type="text" value="4821" />
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;">Xác nhận check-in</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>© 2026 Pass Portal</div>
+        <div>Gate security • Anti-scalping validation</div>
+      </div>
+    </footer>
+  </body>
+</html>

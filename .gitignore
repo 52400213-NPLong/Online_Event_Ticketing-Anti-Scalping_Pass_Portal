@@ -1,0 +1,16 @@
+# Build Outputs
+bin/
+obj/
+out/
+
+# Dependencies
+node_modules/
+
+# User Secrets & Environment
+.env
+*.user
+
+# IDE Configs
+.vs/
+.idea/
+.vscode/
