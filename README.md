@@ -37,8 +37,6 @@ Các chức năng chính:
 
 ```text
 Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
-├── .editorconfig
-├── .env.example
 ├── .gitignore
 ├── docker-compose.yml
 ├── EventTicketingSystem.slnx
@@ -53,6 +51,8 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │   └── workflow/
 │       └── ci.yml
 ├── src/
+│   ├── img/
+│   │   └── top_banner.jpg
 │   ├── EventTicketing.Core/
 │   │   ├── Class1.cs
 │   │   ├── EventTicketing.Core.csproj
@@ -113,13 +113,18 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │   │   │   ├── ErrorHandlingMiddleware.cs
 │   │   │   └── RateLimitingMiddleware.cs
 │   │   └── Properties/
+│   │       └── launchSettings.json
 │   │
 │   └── EventTicketing.WebClient/
 │       ├── package.json
 │       ├── public/
 │       │   ├── assets/
-│       │   │   └── css/
-│       │   │       └── style.css
+│       │   │   ├── css/
+│       │   │   │   └── style.css
+│       │   │   └── js/
+│       │   │       ├── dynamic-qr.js
+│       │   │       ├── gate-scanner.js
+│       │   │       └── seatmap.js
 │       │   ├── pages/
 │       │   │   ├── gate-checkin.html
 │       │   │   ├── index.html
@@ -134,6 +139,8 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │   └── EventTicketing.Tests/
 │       ├── EventTicketing.Tests.csproj
 │       ├── UnitTest1.cs
+│       ├── bin/
+│       ├── obj/
 │       └── UnitTests/
 │           ├── DynamicQrServiceTest.cs
 │           ├── DynamicQrServiceTests.cs
