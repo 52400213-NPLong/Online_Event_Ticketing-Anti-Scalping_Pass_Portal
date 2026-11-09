@@ -92,9 +92,25 @@ button, input, textarea {
 .nav {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 2.5rem;
   color: var(--muted);
   font-weight: 600;
+}
+
+.nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav a:hover,
+.nav a.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .nav a:hover {

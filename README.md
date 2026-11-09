@@ -38,12 +38,15 @@ Các chức năng chính:
 ```text
 Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 ├── .gitignore
+├── .vscode/
 ├── docker-compose.yml
 ├── EventTicketingSystem.slnx
 ├── README.md
 ├── PULL_REQUEST_TEMPLATE.md
 ├── openapi-spec.yaml
 ├── software_engineering_implementation_guide.md
+├── img/
+│   └── top_banner.jpg
 ├── docs/
 │   ├── architecture-sequence.puml
 │   └── openapi.yaml
@@ -51,26 +54,14 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │   └── workflow/
 │       └── ci.yml
 ├── src/
-│   ├── img/
-│   │   └── top_banner.jpg
 │   ├── EventTicketing.Core/
 │   │   ├── Class1.cs
 │   │   ├── EventTicketing.Core.csproj
-│   │   ├── bin/
-│   │   ├── obj/
 │   │   ├── Constants/
 │   │   │   └── AntiScalpingConfig.cs
 │   │   ├── Domain/
 │   │   │   ├── Entities/
-│   │   │   │   ├── CheckInLog.cs
-│   │   │   │   ├── Event.cs
-│   │   │   │   ├── Seat.cs
-│   │   │   │   ├── SeatHold.cs
-│   │   │   │   ├── Ticket.cs
-│   │   │   │   └── User.cs
 │   │   │   └── Enums/
-│   │   │       ├── SeatStatus.cs
-│   │   │       └── TicketStatus.cs
 │   │   └── Interfaces/
 │   │       ├── IDynamicQrService.cs
 │   │       ├── ITicketBookingService.cs
@@ -79,8 +70,6 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │   ├── EventTicketing.Infrastructure/
 │   │   ├── Class1.cs
 │   │   ├── EventTicketing.Infrastructure.csproj
-│   │   ├── bin/
-│   │   ├── obj/
 │   │   ├── Data/
 │   │   │   ├── ApplicationDbContext.cs
 │   │   │   └── Migrations/
@@ -100,8 +89,6 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │   │   ├── EventTicketing.WebApi.csproj
 │   │   ├── EventTicketing.WebApi.http
 │   │   ├── Program.cs
-│   │   ├── bin/
-│   │   ├── obj/
 │   │   ├── Controllers/
 │   │   │   ├── AuthController.cs
 │   │   │   ├── EventsController.cs
@@ -119,13 +106,11 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │       ├── package.json
 │       ├── public/
 │       │   ├── assets/
-│       │   │   ├── css/
-│       │   │   │   └── style.css
-│       │   │   └── js/
-│       │   │       ├── dynamic-qr.js
-│       │   │       ├── gate-scanner.js
-│       │   │       └── seatmap.js
+│       │   │   └── css/
+│       │   │       └── style.css
 │       │   ├── pages/
+│       │   │   ├── all-events.html
+│       │   │   ├── event-calendar.html
 │       │   │   ├── gate-checkin.html
 │       │   │   ├── index.html
 │       │   │   ├── my-tickets.html
@@ -133,18 +118,17 @@ Online_Event_Ticketing-Anti-Scalping_Pass_Portal/
 │       │   └── favicon.ico
 │       └── src/
 │           └── pages/
-│               └── my-tickets.html
 │
 ├── tests/
 │   └── EventTicketing.Tests/
 │       ├── EventTicketing.Tests.csproj
 │       ├── UnitTest1.cs
-│       ├── bin/
-│       ├── obj/
-│       └── UnitTests/
-│           ├── DynamicQrServiceTest.cs
-│           ├── DynamicQrServiceTests.cs
-│           └── TicketBookingTests.cs
+│       ├── UnitTests/
+│       │   ├── DynamicQrServiceTest.cs
+│       │   ├── DynamicQrServiceTests.cs
+│       │   └── TicketBookingTests.cs
+│       └── obj/
+│
 └──
 ```
 

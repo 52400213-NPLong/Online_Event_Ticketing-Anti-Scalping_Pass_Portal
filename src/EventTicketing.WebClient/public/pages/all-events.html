@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tất cả sự kiện | Pass Portal</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <style>
+      .all-events-page {
+        padding: 48px 0 72px;
+      }
+
+      .all-events-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .event-card.featured {
+        border-color: rgba(167, 139, 250, 0.4);
+      }
+
+      @media (max-width: 900px) {
+        .all-events-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .all-events-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-badge">P</span>
+          <span>Pass Portal</span>
+        </a>
+
+        <nav class="nav">
+          <a href="index.html">Trang chủ</a>
+          <a href="all-events.html" class="active">Lịch sự kiện</a>
+          <a href="event-calendar.html">Lịch</a>
+          <a href="seat-selection.html">Chọn ghế</a>
+          <a href="my-tickets.html">Ví vé</a>
+          <a href="gate-checkin.html">Cổng check-in</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="btn btn-secondary">Đăng nhập</button>
+          <button class="btn btn-primary">Mua vé ngay</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="all-events-page">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="kicker">All Events</div>
+            <h2>Tất cả sự kiện</h2>
+          </div>
+          <a href="event-calendar.html" class="btn btn-secondary">Xem lịch</a>
+        </div>
+
+        <div class="all-events-grid">
+          <article class="event-card featured">
+            <div class="event-image">🎵</div>
+            <div class="event-body">
+              <h3>Sunset Music Fest 2026</h3>
+              <div class="event-meta">
+                <span>18/12/2026</span>
+                <span>Hà Nội</span>
+                <span>Nhạc sống</span>
+              </div>
+              <div class="event-footer">
+                <div class="price">1.200.000đ</div>
+                <a class="btn btn-primary" href="seat-selection.html?event=sunset-music-fest-2026">Chọn ghế ngay</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="event-card">
+            <div class="event-image">🎤</div>
+            <div class="event-body">
+              <h3>Jazz Night Live</h3>
+              <div class="event-meta">
+                <span>25/12/2026</span>
+                <span>TP.HCM</span>
+                <span>Jazz</span>
+              </div>
+              <div class="event-footer">
+                <div class="price">890.000đ</div>
+                <a class="btn btn-primary" href="seat-selection.html?event=jazz-night-live">Chọn ghế ngay</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="event-card">
+            <div class="event-image">🎭</div>
+            <div class="event-body">
+              <h3>Art & Light Festival</h3>
+              <div class="event-meta">
+                <span>07/01/2027</span>
+                <span>Đà Nẵng</span>
+                <span>Festival</span>
+              </div>
+              <div class="event-footer">
+                <div class="price">650.000đ</div>
+                <a class="btn btn-primary" href="seat-selection.html?event=art-light-festival">Chọn ghế ngay</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="event-card">
+            <div class="event-image">🚀</div>
+            <div class="event-body">
+              <h3>Tech Summit 2026</h3>
+              <div class="event-meta">
+                <span>22/12/2026</span>
+                <span>Hà Nội</span>
+                <span>Conference</span>
+              </div>
+              <div class="event-footer">
+                <div class="price">900.000đ</div>
+                <a class="btn btn-primary" href="seat-selection.html?event=tech-summit-2026">Chọn ghế ngay</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="event-card">
+            <div class="event-image">🎉</div>
+            <div class="event-body">
+              <h3>Night Market Culture</h3>
+              <div class="event-meta">
+                <span>20/12/2026</span>
+                <span>Đà Nẵng</span>
+                <span>Culture</span>
+              </div>
+              <div class="event-footer">
+                <div class="price">450.000đ</div>
+                <a class="btn btn-primary" href="seat-selection.html?event=night-market-culture">Chọn ghế ngay</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="event-card">
+            <div class="event-image">😂</div>
+            <div class="event-body">
+              <h3>Comedy Night 2026</h3>
+              <div class="event-meta">
+                <span>21/12/2026</span>
+                <span>TP.HCM</span>
+                <span>Comedy</span>
+              </div>
+              <div class="event-footer">
+                <div class="price">560.000đ</div>
+                <a class="btn btn-primary" href="seat-selection.html?event=comedy-night-2026">Chọn ghế ngay</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </main>
+
+    <footer class="eventhub-footer">
+      <div class="container">
+        <div class="footer-cta-banner">
+          <h3>Khám phá nhiều sự kiện hơn nữa</h3>
+          <p>Chọn đúng ngày, đúng địa điểm và đúng trải nghiệm. Mỗi sự kiện đều mang đến không gian riêng để bạn đắm chìm trong cảm xúc.</p>
+          <a class="btn btn-primary" href="event-calendar.html" style="font-size: 1.05rem; padding: 12px 32px;">Xem lịch sự kiện</a>
+        </div>
+
+        <div class="footer-grid">
+          <div>
+            <div class="footer-brand-title">PASS <span>PORTAL</span></div>
+            <p class="footer-desc">Hệ thống bán vé sự kiện trực tuyến & chống phe vé, tối ưu thời gian đặt vé và tăng độ tin cậy cho người dùng.</p>
+          </div>
+
+          <div>
+            <h4 class="footer-heading">Tính năng</h4>
+            <ul class="footer-links">
+              <li><a href="all-events.html">Tất cả sự kiện</a></li>
+              <li><a href="event-calendar.html">Lịch sự kiện</a></li>
+              <li><a href="seat-selection.html">Chọn ghế</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-heading">RESTful Service APIs</h4>
+            <ul class="footer-links">
+              <li><code>GET /api/v1/events/search</code></li>
+              <li><code>POST /api/v1/tickets/reserve</code></li>
+              <li><code>GET /api/v1/qr/dynamic-token</code></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-heading">Đồ án & Môn học</h4>
+            <ul class="footer-links">
+              <li>Môn học: Công nghệ phần mềm (502045)</li>
+              <li>Khoa Công nghệ Thông tin - TDTU</li>
+              <li>Topic 13: Online Event Ticketing System</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="footer-location">📍 Trường Đại học Tôn Đức Thắng - Số 19 Nguyễn Hữu Thọ...</div>
+          <div>© 2026 Online Event Ticketing (Topic 13)</div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

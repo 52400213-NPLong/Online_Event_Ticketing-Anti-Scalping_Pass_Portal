@@ -42,10 +42,11 @@
             rgba(5, 8, 17, 0.92) 100%
           ),
           url('../../../img/top_banner.jpg') center/cover no-repeat;
-        padding: 10rem 0 6rem 0;
-        min-height: 520px;
+        padding: 8rem 0 10rem 0;
+        min-height: 800px;
         display: flex;
         align-items: center;
+        justify-content: center;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         margin-bottom: 2.5rem;
         overflow: hidden;
@@ -57,6 +58,10 @@
         margin: 0 auto;
         padding: 0 20px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
 
       .top-hero-banner .banner-kicker {
@@ -81,6 +86,7 @@
         margin-bottom: 20px;
         line-height: 1.25;
         text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        text-align: center;
       }
 
       .top-hero-banner h1.slogan-title .highlight {
@@ -96,12 +102,15 @@
         margin: 0 auto 36px auto;
         line-height: 1.7;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        text-align: center;
       }
 
       .top-hero-banner .banner-actions {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 16px;
+        flex-wrap: wrap;
       }
 
       /* CSS bổ sung cho Khối CTA Kêu Gọi Đặt Vé Ngay ở Footer */
@@ -235,7 +244,8 @@
 
         <!-- MENU ĐẦU TRANG -->
         <nav class="nav">
-          <a href="index.html">Trang chủ</a>
+          <a href="index.html" class="active">Trang chủ</a>
+          <a href="event-calendar.html">Lịch sự kiện</a>
           <a href="seat-selection.html">Chọn ghế</a>
           <a href="my-tickets.html">Ví vé</a>
           <a href="gate-checkin.html">Cổng check-in</a>
@@ -263,7 +273,7 @@
           <div class="banner-actions">
             <!-- NÚT "KHÁM PHÁ NGAY ↓" TỰ ĐỘNG TRƯỢT XUỐNG PHẦN BODY (#hero-section) -->
             <a class="btn btn-primary" href="#hero-section">Khám phá ngay ↓</a>
-            <a class="btn btn-secondary" href="seat-selection.html">Xem lịch sự kiện</a>
+            <a class="btn btn-secondary" href="event-calendar.html">Xem lịch sự kiện</a>
           </div>
         </div>
       </section>
@@ -281,7 +291,7 @@
             </p>
 
             <div class="hero-actions">
-              <a class="btn btn-primary" href="seat-selection.html">Đặt vé ngay</a>
+              <a class="btn btn-primary" href="all-events.html">Đặt vé ngay</a>
               <a class="btn btn-secondary" href="my-tickets.html">Ví vé cá nhân</a>
             </div>
 
@@ -336,7 +346,7 @@
         <div class="container">
           <div class="section-header">
             <h2>Sự kiện nổi bật sắp diễn ra</h2>
-            <a class="btn btn-secondary" href="seat-selection.html">Xem tất cả</a>
+            <a class="btn btn-secondary" href="all-events.html">Xem tất cả</a>
           </div>
 
           <div class="card-grid">
@@ -350,7 +360,7 @@
                 </div>
                 <div class="event-footer">
                   <div class="price">1.200.000đ</div>
-                  <a class="btn btn-primary" href="seat-selection.html">Chọn ghế ngay</a>
+                  <a class="btn btn-primary" href="seat-selection.html?event=sunset-music-fest-2026">Chọn ghế ngay</a>
                 </div>
               </div>
             </article>
@@ -365,7 +375,7 @@
                 </div>
                 <div class="event-footer">
                   <div class="price">890.000đ</div>
-                  <a class="btn btn-primary" href="seat-selection.html">Chọn ghế ngay</a>
+                  <a class="btn btn-primary" href="seat-selection.html?event=jazz-night-live">Chọn ghế ngay</a>
                 </div>
               </div>
             </article>
@@ -380,7 +390,7 @@
                 </div>
                 <div class="event-footer">
                   <div class="price">650.000đ</div>
-                  <a class="btn btn-primary" href="seat-selection.html">Chọn ghế ngay</a>
+                  <a class="btn btn-primary" href="seat-selection.html?event=art-light-festival">Chọn ghế ngay</a>
                 </div>
               </div>
             </article>
