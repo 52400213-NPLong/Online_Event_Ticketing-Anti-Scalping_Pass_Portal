@@ -53,7 +53,7 @@
 
     const subtitle = presented
       ? `Phát hiện vé vừa xuất trình: <strong>${presented.eventName || 'Sự kiện'} • Ghế ${presented.seatLabel || '?'}</strong> (${presented.holderName || 'Khách hàng'})`
-      : 'Chưa có vé xuất trình trong phiên trình duyệt này (hoặc nhập trực tiếp bên dưới).';
+      : 'Sẵn sàng nạp mã QR khách vừa xuất trình từ Ví vé (Hỗ trợ cả tab ẩn danh & thiết bị khác).';
 
     helperDiv.innerHTML = `
       <div style="font-size:0.8rem; color:#bfdbfe; margin-bottom:8px;" id="presentedQrStatus">${subtitle}</div>
@@ -64,30 +64,43 @@
 
     heading.insertAdjacentElement('afterend', helperDiv);
 
-    document.getElementById('loadPresentedQrBtn')?.addEventListener('click', () => {
+    document.getElementById('loadPresentedQrBtn')?.addEventListener('click', async () => {
+      let data = null;
+
+      // 1. Ưu tiên nạp từ máy chủ API (đồng bộ xuyên suốt kể cả tab ẩn danh, các trình duyệt khác nhau)
       try {
-        const raw = localStorage.getItem(PRESENTED_QR_KEY);
-        if (!raw) {
-          showResult('warning', '⚠️ Chưa có khách hàng nào bấm "Xuất trình mã QR" từ Ví vé trên trình duyệt này.');
-          return;
+        const headers = window.PassPortalAuth ? window.PassPortalAuth.getAuthHeaders() : {};
+        const res = await fetch(`${API_BASE}/api/v1/gate/latest-presented`, { headers });
+        if (res.ok) {
+          data = await res.json();
         }
-        const data = JSON.parse(raw);
-        const ticketInput = document.getElementById('ticketId');
-        const userInput = document.getElementById('userId');
-        const tokenInput = document.getElementById('token');
+      } catch {}
 
-        if (ticketInput) ticketInput.value = data.ticketId || '';
-        if (userInput) userInput.value = data.userId || '';
-        if (tokenInput) tokenInput.value = data.token || '';
-
-        const ageSec = Math.max(0, Math.floor((Date.now() - (data.presentedAt || Date.now())) / 1000));
-        showResult(
-          'success',
-          `📥 Đã nạp thông tin vé <strong>Ghế ${data.seatLabel}</strong> của khách <strong>${data.holderName || data.userId}</strong> (xuất trình ${ageSec}s trước). Nhấn <strong>Xác nhận check-in</strong> để kiểm tra!`
-        );
-      } catch {
-        showResult('danger', '❌ Không đọc được dữ liệu mã QR xuất trình.');
+      // 2. Dự phòng đọc từ localStorage nếu mất kết nối mạng
+      if (!data) {
+        try {
+          const raw = localStorage.getItem(PRESENTED_QR_KEY);
+          if (raw) data = JSON.parse(raw);
+        } catch {}
       }
+
+      if (!data || !data.ticketId) {
+        showResult('warning', '⚠️ Chưa có khách hàng nào bấm "Xuất trình mã QR" từ Ví vé.');
+        return;
+      }
+
+      const ticketInput = document.getElementById('ticketId');
+      const userInput = document.getElementById('userId');
+      const tokenInput = document.getElementById('token');
+
+      if (ticketInput) ticketInput.value = data.ticketId || '';
+      if (userInput) userInput.value = data.userId || '';
+      if (tokenInput) tokenInput.value = data.token || '';
+
+      showResult(
+        'success',
+        `📥 Đã nạp thông tin vé <strong>Ghế ${data.seatLabel || '?'}</strong> của khách <strong>${data.holderName || data.userId}</strong>. Nhấn <strong>Xác nhận check-in</strong> để kiểm tra!`
+      );
     });
   }
 

@@ -18,12 +18,36 @@ namespace EventTicketing.WebApi.Controllers
         private readonly ApplicationDbContext _db;
         private readonly JwtTokenGenerator _jwtValidator;
         private static readonly object GateLock = new();
+        private static PresentedQrDto? _latestPresentedQr;
 
         public GateController(IDynamicQrService qrService, ApplicationDbContext db, JwtTokenGenerator? jwtValidator = null)
         {
             _qrService = qrService;
             _db = db;
             _jwtValidator = jwtValidator ?? new JwtTokenGenerator();
+        }
+
+        /// <summary>
+        /// Khách hàng phát tín hiệu xuất trình mã QR lên hệ thống máy chủ (Hỗ trợ quét chéo giữa các tab / thiết bị)
+        /// </summary>
+        [HttpPost("present")]
+        public IActionResult PresentTicket([FromBody] PresentedQrDto request)
+        {
+            _latestPresentedQr = request;
+            return Ok(new { message = "Đã phát tín hiệu xuất trình vé lên hệ thống cổng soát vé." });
+        }
+
+        /// <summary>
+        /// Nhân viên cổng lấy thông tin vé vừa được khách xuất trình gần nhất
+        /// </summary>
+        [HttpGet("latest-presented")]
+        public IActionResult GetLatestPresented()
+        {
+            if (_latestPresentedQr is null)
+            {
+                return NotFound(new { message = "Chưa có khách nào phát tín hiệu xuất trình vé." });
+            }
+            return Ok(_latestPresentedQr);
         }
 
         /// <summary>
@@ -187,4 +211,5 @@ namespace EventTicketing.WebApi.Controllers
     }
 
     public record CheckInRequest(Guid TicketId, string UserId, string DynamicToken, string? StaffId = "GATE_STAFF");
+    public record PresentedQrDto(Guid TicketId, string UserId, string Token, string? SeatLabel, string? EventName, string? HolderName);
 }

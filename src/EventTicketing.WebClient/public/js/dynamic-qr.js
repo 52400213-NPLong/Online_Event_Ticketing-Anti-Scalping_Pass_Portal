@@ -157,6 +157,16 @@
         presentedAt: Date.now()
       };
       localStorage.setItem(PRESENTED_QR_KEY, JSON.stringify(payload));
+
+      // Gửi tín hiệu xuất trình vé lên máy chủ để các tab ẩn danh hoặc thiết bị khác cũng nhận được
+      try {
+        const headers = window.PassPortalAuth ? window.PassPortalAuth.getAuthHeaders() : { 'Content-Type': 'application/json' };
+        fetch(`${API_BASE}/api/v1/gate/present`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload)
+        }).catch(() => {});
+      } catch {}
     }
 
     async function fetchNewToken() {
