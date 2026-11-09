@@ -87,7 +87,7 @@ public class EventsController : ControllerBase
     {
         lock (_db)
         {
-            var seats = _db.Seats
+            var rawSeats = _db.Seats
                 .Where(s => s.EventId == eventId)
                 .Select(s => new
                 {
@@ -97,6 +97,12 @@ public class EventsController : ControllerBase
                     Status = s.Status.ToString(),
                     s.HoldExpiresAt
                 })
+                .ToList();
+
+            // Sắp xếp chuẩn xác theo Hàng (A -> B -> C -> D) và Cột (1 -> 2 -> ... -> 8)
+            var seats = rawSeats
+                .OrderBy(s => s.SeatLabel.Length > 0 ? s.SeatLabel[0] : 'Z')
+                .ThenBy(s => int.TryParse(s.SeatLabel.Substring(1), out var col) ? col : 0)
                 .ToList();
 
             return Ok(seats);

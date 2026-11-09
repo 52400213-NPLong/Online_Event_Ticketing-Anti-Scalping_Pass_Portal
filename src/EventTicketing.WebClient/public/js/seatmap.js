@@ -113,10 +113,24 @@
 
   function renderSeats(seats) {
     const seatGrid = document.querySelector('.seat-grid');
-    if (!seatGrid) return;
+    if (!seatGrid || !Array.isArray(seats)) return;
+
+    // Sắp xếp đảm bảo đúng chuẩn thứ tự: Hàng A -> B -> C -> D, mỗi hàng từ ghế 1 -> 8
+    const sortedSeats = [...seats].sort((a, b) => {
+      const rowA = (a.seatLabel || '').charAt(0);
+      const rowB = (b.seatLabel || '').charAt(0);
+      if (rowA !== rowB) return rowA.localeCompare(rowB);
+      const colA = parseInt((a.seatLabel || '').slice(1), 10) || 0;
+      const colB = parseInt((b.seatLabel || '').slice(1), 10) || 0;
+      return colA - colB;
+    });
+
+    // Tự động căn chỉnh số cột theo số ghế mỗi hàng (mặc định 8 ghế/hàng)
+    const maxCol = Math.max(...sortedSeats.map(s => parseInt((s.seatLabel || '').slice(1), 10) || 0), 8);
+    seatGrid.style.gridTemplateColumns = `repeat(${maxCol}, minmax(0, 1fr))`;
 
     seatGrid.innerHTML = '';
-    seats.forEach((seat) => {
+    sortedSeats.forEach((seat) => {
       const btn = document.createElement('button');
       const statusClass = seat.status.toLowerCase();
 
