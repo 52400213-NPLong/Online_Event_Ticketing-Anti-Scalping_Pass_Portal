@@ -232,6 +232,97 @@
           grid-template-columns: 1fr;
         }
       }
+      /* CSS cho Thanh tìm kiếm sự kiện */
+      .event-search-wrapper {
+        background: #18181b;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      }
+
+      .search-input-group {
+        flex: 1 1 280px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input-group input {
+        width: 100%;
+        padding: 12px 16px 12px 42px;
+        background: #27272a;
+        border: 1px solid #3f3f46;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 0.95rem;
+        outline: none;
+        transition: all 0.2s;
+      }
+
+      .search-input-group input:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+      }
+
+      .search-input-group .search-icon {
+        position: absolute;
+        left: 14px;
+        color: #9ca3af;
+        pointer-events: none;
+        font-size: 1.1rem;
+      }
+
+      .search-filter-select {
+        padding: 12px 16px;
+        background: #27272a;
+        border: 1px solid #3f3f46;
+        border-radius: 8px;
+        color: #f4f4f5;
+        font-size: 0.95rem;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .search-filter-select:focus {
+        border-color: #60a5fa;
+      }
+
+      .search-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+
+      .search-tag-pill {
+        padding: 6px 16px;
+        border-radius: 20px;
+        background: #27272a;
+        color: #a1a1aa;
+        font-size: 0.85rem;
+        cursor: pointer;
+        border: 1px solid #3f3f46;
+        transition: all 0.2s;
+      }
+
+      .search-tag-pill:hover,
+      .search-tag-pill.active {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        border-color: #3b82f6;
+      }
+
+      .search-result-count {
+        font-size: 0.875rem;
+        color: #94a3b8;
+        margin-bottom: 16px;
+      }
     </style>
   </head>
   <body>
@@ -271,8 +362,8 @@
             Trải nghiệm hệ thống bán vé sự kiện trực tuyến thế hệ mới. Khóa giữ chỗ theo thời gian thực, cấp phát vé QR động 30 giây chống phe vé và tích hợp API quét check-in tại cổng.
           </p>
           <div class="banner-actions">
-            <!-- NÚT "KHÁM PHÁ NGAY ↓" TỰ ĐỘNG TRƯỢT XUỐNG PHẦN BODY (#hero-section) -->
-            <a class="btn btn-primary" href="#hero-section">Khám phá ngay ↓</a>
+            <!-- NÚT "KHÁM PHÁ NGAY ↓" TỰ ĐỘNG TRƯỢT XUỐNG PHẦN TÌM KIẾM SỰ KIỆN (#events-section) -->
+            <a class="btn btn-primary" href="#events-section">Khám phá sự kiện ↓</a>
             <a class="btn btn-secondary" href="event-calendar.html">Xem lịch sự kiện</a>
           </div>
         </div>
@@ -341,22 +432,61 @@
         </div>
       </section>
 
-      <!-- 3. PHẦN SỰ KIỆN NỔI BẬT NẰM BÊN ĐƯỚI -->
-      <section class="section">
+      <!-- 3. PHẦN SỰ KIỆN NỔI BẬT NẰM BÊN ĐƯỚI CÙNG BỘ LỌC & TÌM KIẾM -->
+      <section class="section" id="events-section">
         <div class="container">
           <div class="section-header">
-            <h2>Sự kiện nổi bật sắp diễn ra</h2>
+            <div>
+              <div class="kicker" style="color: #60a5fa;">Discovery</div>
+              <h2>Sự kiện nổi bật sắp diễn ra</h2>
+            </div>
             <a class="btn btn-secondary" href="all-events.html">Xem tất cả</a>
           </div>
 
-          <div class="card-grid">
-            <article class="event-card">
+          <!-- THANH TÌM KIẾM SỰ KIỆN NÂNG CAO -->
+          <div class="event-search-wrapper">
+            <div class="search-input-group">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="eventSearchInput" placeholder="Tìm kiếm theo tên sự kiện, ca sĩ, ban nhạc..." />
+            </div>
+
+            <select id="venueFilterSelect" class="search-filter-select">
+              <option value="all">📍 Tất cả địa điểm</option>
+              <option value="Hà Nội">Hà Nội</option>
+              <option value="TP.HCM">TP. Hồ Chí Minh</option>
+              <option value="Đà Nẵng">Đà Nẵng</option>
+            </select>
+
+            <select id="sortFilterSelect" class="search-filter-select">
+              <option value="default">Sắp xếp: Mặc định</option>
+              <option value="price-asc">Giá: Thấp đến Cao</option>
+              <option value="price-desc">Giá: Cao đến Thấp</option>
+            </select>
+
+            <button id="resetSearchBtn" class="btn btn-secondary" style="padding: 11px 16px; font-size: 0.9rem;">
+              Đặt lại
+            </button>
+          </div>
+
+          <!-- TAGS THỂ LOẠI -->
+          <div class="search-tags">
+            <button class="search-tag-pill active" data-category="all">Tất cả</button>
+            <button class="search-tag-pill" data-category="music">🎵 Âm nhạc / Concert</button>
+            <button class="search-tag-pill" data-category="jazz">🎷 Jazz & Acoustic</button>
+            <button class="search-tag-pill" data-category="art">🎭 Lễ hội nghệ thuật</button>
+            <button class="search-tag-pill" data-category="rock">🎸 Rock Symphony</button>
+          </div>
+
+          <div id="searchResultCount" class="search-result-count">Hiển thị 4 sự kiện</div>
+
+          <div class="card-grid" id="eventsGrid">
+            <article class="event-card" data-title="Sunset Music Fest 2026" data-venue="Hà Nội" data-category="music" data-price="1200000">
               <div class="event-image">🎵</div>
               <div class="event-body">
                 <h3>Sunset Music Fest 2026</h3>
                 <div class="event-meta">
                   <span>18/12/2026</span>
-                  <span>Hà Nội</span>
+                  <span>Sân vận động Mỹ Đình • Hà Nội</span>
                 </div>
                 <div class="event-footer">
                   <div class="price">1.200.000đ</div>
@@ -365,13 +495,13 @@
               </div>
             </article>
 
-            <article class="event-card">
-              <div class="event-image">🎤</div>
+            <article class="event-card" data-title="Jazz Night Live Acoustic" data-venue="TP.HCM" data-category="jazz" data-price="890000">
+              <div class="event-image">🎷</div>
               <div class="event-body">
-                <h3>Jazz Night Live</h3>
+                <h3>Jazz Night Live Acoustic</h3>
                 <div class="event-meta">
                   <span>25/12/2026</span>
-                  <span>TP.HCM</span>
+                  <span>Nhà hát Lớn • TP.HCM</span>
                 </div>
                 <div class="event-footer">
                   <div class="price">890.000đ</div>
@@ -380,13 +510,13 @@
               </div>
             </article>
 
-            <article class="event-card">
+            <article class="event-card" data-title="Art & Light Festival" data-venue="Đà Nẵng" data-category="art" data-price="650000">
               <div class="event-image">🎭</div>
               <div class="event-body">
                 <h3>Art & Light Festival</h3>
                 <div class="event-meta">
                   <span>07/01/2027</span>
-                  <span>Đà Nẵng</span>
+                  <span>Công viên Cầu Rồng • Đà Nẵng</span>
                 </div>
                 <div class="event-footer">
                   <div class="price">650.000đ</div>
@@ -394,6 +524,29 @@
                 </div>
               </div>
             </article>
+
+            <article class="event-card" data-title="Rock Symphony Concert 2027" data-venue="Hà Nội" data-category="rock" data-price="1500000">
+              <div class="event-image">🎸</div>
+              <div class="event-body">
+                <h3>Rock Symphony Concert 2027</h3>
+                <div class="event-meta">
+                  <span>20/01/2027</span>
+                  <span>Cung Điền kinh • Hà Nội</span>
+                </div>
+                <div class="event-footer">
+                  <div class="price">1.500.000đ</div>
+                  <a class="btn btn-primary" href="seat-selection.html?event=rock-symphony-concert">Chọn ghế ngay</a>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- EMPTY STATE KHI KHÔNG TÌM THẤY KẾT QUẢ -->
+          <div id="noEventsState" style="display: none; background: #18181b; border: 1px dashed #3f3f46; border-radius: 14px; padding: 48px; text-align: center; margin-top: 16px;">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">🔎</div>
+            <h3 style="color: #f4f4f5; margin-bottom: 8px;">Không tìm thấy sự kiện phù hợp</h3>
+            <p style="color: #9ca3af; margin-bottom: 20px;">Vui lòng thử tìm với từ khóa khác hoặc xóa bộ lọc để xem tất cả sự kiện.</p>
+            <button id="clearFilterBtn" class="btn btn-primary">Xóa bộ lọc tìm kiếm</button>
           </div>
         </div>
       </section>
@@ -458,5 +611,148 @@
         </div>
       </div>
     </footer>
+
+    <script src="../js/auth.js"></script>
+    <script>
+      (function() {
+        const searchInput = document.getElementById('eventSearchInput');
+        const venueSelect = document.getElementById('venueFilterSelect');
+        const sortSelect = document.getElementById('sortFilterSelect');
+        const resetBtn = document.getElementById('resetSearchBtn');
+        const clearBtn = document.getElementById('clearFilterBtn');
+        const countDisplay = document.getElementById('searchResultCount');
+        const eventsGrid = document.getElementById('eventsGrid');
+        const noEventsState = document.getElementById('noEventsState');
+        const tagPills = document.querySelectorAll('.search-tag-pill');
+
+        let activeCategory = 'all';
+
+        // Tự động đồng bộ thêm các sự kiện mới do Admin khởi tạo từ SQL Server
+        async function syncNewEventsFromApi() {
+          try {
+            const apiBase = window.location.origin.includes('http') ? window.location.origin : 'http://localhost:5000';
+            const res = await fetch(`${apiBase}/api/v1/events`);
+            if (!res.ok) return;
+            const apiEvents = await res.json();
+            if (!Array.isArray(apiEvents) || !eventsGrid) return;
+
+            const existingTitles = new Set(
+              Array.from(document.querySelectorAll('.event-card')).map(c => (c.dataset.title || '').trim().toLowerCase())
+            );
+
+            apiEvents.forEach(ev => {
+              const normTitle = (ev.title || '').trim().toLowerCase();
+              if (!normTitle || existingTitles.has(normTitle)) return;
+
+              const dateStr = ev.startTime
+                ? new Date(ev.startTime).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                : 'Sắp diễn ra';
+
+              const card = document.createElement('article');
+              card.className = 'event-card';
+              card.dataset.title = ev.title;
+              card.dataset.venue = ev.venue || 'Việt Nam';
+              card.dataset.category = 'music';
+              card.dataset.price = '890000';
+              card.innerHTML = `
+                <div class="event-image">✨</div>
+                <div class="event-body">
+                  <h3>${ev.title}</h3>
+                  <div class="event-meta">
+                    <span>${dateStr}</span>
+                    <span>${ev.venue || 'Địa điểm sự kiện'}</span>
+                  </div>
+                  <div class="event-footer">
+                    <div class="price">Từ 650.000đ</div>
+                    <a class="btn btn-primary" href="seat-selection.html?eventId=${ev.id}">Chọn ghế ngay</a>
+                  </div>
+                </div>
+              `;
+              eventsGrid.appendChild(card);
+              existingTitles.add(normTitle);
+            });
+
+            filterEvents();
+          } catch {
+            // Bỏ qua nếu đang mở file tĩnh không chạy API
+          }
+        }
+
+        function filterEvents() {
+          const keyword = (searchInput?.value || '').trim().toLowerCase();
+          const selectedVenue = venueSelect?.value || 'all';
+          const selectedSort = sortSelect?.value || 'default';
+
+          const cards = Array.from(document.querySelectorAll('.event-card'));
+          let visibleCount = 0;
+
+          cards.forEach(card => {
+            const title = (card.dataset.title || '').toLowerCase();
+            const venue = (card.dataset.venue || '').toLowerCase();
+            const category = card.dataset.category || 'all';
+
+            const matchKeyword = !keyword || title.includes(keyword) || venue.includes(keyword);
+            const matchVenue = selectedVenue === 'all' || venue.includes(selectedVenue.toLowerCase());
+            const matchCategory = activeCategory === 'all' || category === activeCategory;
+
+            if (matchKeyword && matchVenue && matchCategory) {
+              card.style.display = 'flex';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          // Xử lý sắp xếp theo giá
+          if (selectedSort === 'price-asc') {
+            cards.sort((a, b) => Number(a.dataset.price) - Number(b.dataset.price));
+            cards.forEach(c => eventsGrid.appendChild(c));
+          } else if (selectedSort === 'price-desc') {
+            cards.sort((a, b) => Number(b.dataset.price) - Number(a.dataset.price));
+            cards.forEach(c => eventsGrid.appendChild(c));
+          }
+
+          if (countDisplay) {
+            countDisplay.textContent = `Hiển thị ${visibleCount} sự kiện`;
+          }
+
+          if (noEventsState && eventsGrid) {
+            if (visibleCount === 0) {
+              noEventsState.style.display = 'block';
+              eventsGrid.style.display = 'none';
+            } else {
+              noEventsState.style.display = 'none';
+              eventsGrid.style.display = 'grid';
+            }
+          }
+        }
+
+        searchInput?.addEventListener('input', filterEvents);
+        venueSelect?.addEventListener('change', filterEvents);
+        sortSelect?.addEventListener('change', filterEvents);
+
+        tagPills.forEach(pill => {
+          pill.addEventListener('click', () => {
+            tagPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            activeCategory = pill.dataset.category || 'all';
+            filterEvents();
+          });
+        });
+
+        function resetAll() {
+          if (searchInput) searchInput.value = '';
+          if (venueSelect) venueSelect.value = 'all';
+          if (sortSelect) sortSelect.value = 'default';
+          activeCategory = 'all';
+          tagPills.forEach(p => p.classList.toggle('active', p.dataset.category === 'all'));
+          filterEvents();
+        }
+
+        resetBtn?.addEventListener('click', resetAll);
+        clearBtn?.addEventListener('click', resetAll);
+        syncNewEventsFromApi();
+      })();
+    </script>
   </body>
 </html>

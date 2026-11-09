@@ -1,21 +1,41 @@
-version: '3.8'
-
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: passportal-sqlserver
+    platform: linux/amd64
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourPassword123!
+      - SA_PASSWORD=YourPassword123!
+      - MSSQL_PID=Express
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433'"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    restart: unless-stopped
+
   webapi:
     build:
       context: .
       dockerfile: src/EventTicketing.WebApi/Dockerfile
+    container_name: passportal-webapi
     ports:
-      - "5000:80"
+      - "5000:8080"
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
       - DYNAMIC_QR_SECRET_KEY=SuperSecretProductionKey999!
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=EventTicketingDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=True;MultipleActiveResultSets=True
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
+    restart: on-failure
 
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    ports:
-      - "1433:1433"
-    environment:
-      - SA_PASSWORD=YourPassword123!
-      - ACCEPT_EULA=Y
+volumes:
+  sqlserver_data:

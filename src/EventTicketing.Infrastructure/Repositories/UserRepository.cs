@@ -1,3 +1,7 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using EventTicketing.Core.Domain.Entities;
 using EventTicketing.Core.Interfaces;
 using EventTicketing.Infrastructure.Data;
@@ -14,14 +18,15 @@ public class UserRepository : IUserRepository
     }
 
     public Task<User?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
-        => Task.FromResult(_db.Users.FirstOrDefault(u => u.Id == userId));
+        => _db.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
-        => Task.FromResult(_db.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase)));
+        => _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower(), cancellationToken);
 
-    public Task<User> AddAsync(User user, CancellationToken cancellationToken = default)
+    public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default)
     {
         _db.Users.Add(user);
-        return Task.FromResult(user);
+        await _db.SaveChangesAsync(cancellationToken);
+        return user;
     }
 }

@@ -2,4 +2,13 @@ using System;
 
 namespace EventTicketing.Core.Domain.Entities;
 
-// Intentionally left blank: CheckInLog is defined in Ticket.cs to avoid duplicate type definitions.
+public class CheckInLog
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid TicketId { get; set; }
+    public string UserId { get; set; } = string.Empty;
+    public string StaffId { get; set; } = "GATE_STAFF_1";
+    public DateTime ScannedAt { get; set; } = DateTime.UtcNow;
+    public string Status { get; set; } = "SUCCESS";
+    public string? Reason { get; set; }
+}

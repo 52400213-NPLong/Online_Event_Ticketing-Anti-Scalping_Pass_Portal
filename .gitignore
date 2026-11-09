@@ -14,3 +14,10 @@ node_modules/
 .vs/
 .idea/
 .vscode/
+
+# Local Database Artifacts
+*.db
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf

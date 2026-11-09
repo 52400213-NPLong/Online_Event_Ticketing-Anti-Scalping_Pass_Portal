@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản trị & Báo cáo | Pass Portal</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <style>
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+
+      .kpi-card {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.72));
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .kpi-card .kpi-label {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .kpi-card .kpi-value {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: #f8fafc;
+      }
+
+      .admin-grid {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      @media (max-width: 960px) {
+        .kpi-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .admin-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-badge">P</span>
+          <span>Pass Portal</span>
+        </a>
+
+        <nav class="nav"></nav>
+        <div class="nav-actions"></div>
+      </div>
+    </header>
+
+    <main class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Event Manager • Admin Portal</div>
+            <h2>Quản trị Sự kiện & Báo cáo Doanh thu</h2>
+          </div>
+          <button id="refreshStatsBtn" class="btn btn-secondary">🔄 Làm mới số liệu</button>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">💰 Tổng doanh thu vé</div>
+            <div id="kpiRevenue" class="kpi-value" style="color: #4ade80;">0đ</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">🎟️ Vé đã phát hành</div>
+            <div id="kpiTickets" class="kpi-value">0</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">🪑 Tỷ lệ lấp đầy ghế</div>
+            <div id="kpiOccupancy" class="kpi-value" style="color: #60a5fa;">0%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">✅ Tỷ lệ đã Check-in cổng</div>
+            <div id="kpiCheckIn" class="kpi-value" style="color: #c084fc;">0%</div>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <!-- BẢNG THỐNG KÊ THEO SỰ KIỆN -->
+          <div class="panel">
+            <h3>📊 Thống kê bán vé & Check-in theo Sự kiện</h3>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid rgba(148,163,184,0.2); color: #94a3b8;">
+                    <th style="padding: 10px 8px;">Sự kiện</th>
+                    <th style="padding: 10px 8px;">Đã bán / Tổng</th>
+                    <th style="padding: 10px 8px;">Đang giữ</th>
+                    <th style="padding: 10px 8px;">Check-in</th>
+                    <th style="padding: 10px 8px;">Doanh thu</th>
+                  </tr>
+                </thead>
+                <tbody id="eventsReportBody">
+                  <tr>
+                    <td colspan="5" style="padding: 20px; color: #94a3b8; text-align: center;">Đang tải báo cáo từ SQL Server...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CỘT PHẢI: TẠO SỰ KIỆN & CẤP TÀI KHOẢN NỘI BỘ -->
+          <div style="display: grid; gap: 24px;">
+            <div class="panel">
+              <h3>➕ Mở bán Sự kiện mới</h3>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -6px; margin-bottom: 16px;">
+                Tự động khởi tạo sơ đồ 32 ghế (Hàng A, B, C, D) vào SQL Server.
+              </p>
+              <form id="createEventForm">
+                <div class="form-field">
+                  <label for="evTitle">Tên sự kiện</label>
+                  <input id="evTitle" type="text" placeholder="VD: Indie Acoustic Night 2027" required />
+                </div>
+                <div class="form-field">
+                  <label for="evVenue">Địa điểm tổ chức</label>
+                  <input id="evVenue" type="text" placeholder="VD: Nhà thi đấu Phú Thọ - TP.HCM" required />
+                </div>
+                <div class="form-field">
+                  <label for="evDate">Ngày giờ diễn ra</label>
+                  <input id="evDate" type="datetime-local" required />
+                </div>
+                <div class="form-field">
+                  <label for="evVipPrice">Giá vé VIP Hàng A (VNĐ)</label>
+                  <input id="evVipPrice" type="number" value="1200000" min="100000" step="50000" required />
+                </div>
+                <button id="createEvBtn" type="submit" class="btn btn-primary" style="width: 100%;">
+                  Khởi tạo Sự kiện & Sơ đồ ghế
+                </button>
+                <div id="createEvMsg" style="margin-top: 12px; font-size: 0.85rem; display: none;"></div>
+              </form>
+            </div>
+
+            <div class="panel">
+              <h3>👤 Cấp tài khoản Nội bộ</h3>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin-top: -6px; margin-bottom: 16px;">
+                Chỉ Quản trị viên (ADMIN) mới có quyền tạo tài khoản Nhân viên soát vé hoặc Quản trị viên mới.
+              </p>
+              <form id="createStaffForm">
+                <div class="form-field">
+                  <label for="staffFullName">Họ và tên nhân sự</label>
+                  <input id="staffFullName" type="text" placeholder="VD: Nguyễn Minh Khoa" required />
+                </div>
+                <div class="form-field">
+                  <label for="staffEmail">Email công vụ</label>
+                  <input id="staffEmail" type="email" placeholder="VD: gate2@passportal.vn" required />
+                </div>
+                <div class="form-field">
+                  <label for="staffPassword">Mật khẩu khởi tạo (>= 8 ký tự)</label>
+                  <input id="staffPassword" type="password" minlength="8" placeholder="Nhập mật khẩu cấp phát..." required />
+                </div>
+                <div class="form-field">
+                  <label for="staffRole">Vai trò nội bộ</label>
+                  <select id="staffRole" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); color: var(--text); border-radius: 12px; padding: 12px 14px; width: 100%;">
+                    <option value="GATE_STAFF">🚪 Nhân viên soát vé cổng (GATE_STAFF)</option>
+                    <option value="ADMIN">🛡️ Quản trị viên (ADMIN)</option>
+                  </select>
+                </div>
+                <button id="createStaffBtn" type="submit" class="btn btn-secondary" style="width: 100%;">
+                  Cấp phát tài khoản nội bộ
+                </button>
+                <div id="createStaffMsg" style="margin-top: 12px; font-size: 0.85rem; display: none;"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="eventhub-footer">
+      <div class="container">
+        <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+          <div class="footer-location">📍 Trường Đại học Tôn Đức Thắng - Môn Công nghệ phần mềm (502045)</div>
+          <div>© 2026 Online Event Ticketing & Anti-Scalping Portal (Topic 13)</div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script>
+      (function () {
+        const API_BASE = window.location.origin.includes('http')
+          ? window.location.origin
+          : 'http://localhost:5000';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+          // Chặn truy cập nếu không phải vai trò ADMIN
+          if (!window.PassPortalAuth.requireRole(['ADMIN'])) return;
+
+          const defaultDate = new Date(Date.now() + 20 * 86400000);
+          const evDateInput = document.getElementById('evDate');
+          if (evDateInput) {
+            evDateInput.value = defaultDate.toISOString().slice(0, 16);
+          }
+
+          await loadStats();
+
+          document.getElementById('refreshStatsBtn')?.addEventListener('click', loadStats);
+          document.getElementById('createEventForm')?.addEventListener('submit', handleCreateEvent);
+          document.getElementById('createStaffForm')?.addEventListener('submit', handleCreateStaff);
+        });
+
+        async function loadStats() {
+          try {
+            const res = await fetch(`${API_BASE}/api/v1/admin/stats`, {
+              headers: window.PassPortalAuth.getAuthHeaders()
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+
+            document.getElementById('kpiRevenue').textContent = `${Number(data.totalRevenue).toLocaleString('vi-VN')}đ`;
+            document.getElementById('kpiTickets').textContent = `${data.totalTicketsIssued} vé`;
+            document.getElementById('kpiOccupancy').textContent = `${data.occupancyRate}%`;
+            document.getElementById('kpiCheckIn').textContent = `${data.checkInRate}% (${data.checkedInTickets}/${data.totalTicketsIssued})`;
+
+            const tbody = document.getElementById('eventsReportBody');
+            tbody.innerHTML = data.events
+              .map(
+                (ev) => `
+                <tr style="border-bottom: 1px solid rgba(148,163,184,0.1);">
+                  <td style="padding: 12px 8px;">
+                    <strong style="color:#f8fafc;">${ev.title}</strong>
+                    <div style="font-size:0.78rem; color:#94a3b8;">${ev.venue}</div>
+                  </td>
+                  <td style="padding: 12px 8px;">
+                    <strong>${ev.soldSeats}/${ev.totalSeats}</strong>
+                    <span style="font-size:0.78rem; color:#60a5fa;">(${ev.occupancyPercent}%)</span>
+                  </td>
+                  <td style="padding: 12px 8px; color:#fbbf24;">${ev.heldSeats}</td>
+                  <td style="padding: 12px 8px; color:#c084fc;">${ev.checkedInCount}</td>
+                  <td style="padding: 12px 8px; font-weight:700; color:#4ade80;">${Number(ev.revenue).toLocaleString('vi-VN')}đ</td>
+                </tr>
+              `
+              )
+              .join('');
+          } catch (err) {
+            console.error('Lỗi tải báo cáo Admin:', err);
+          }
+        }
+
+        async function handleCreateEvent(e) {
+          e.preventDefault();
+          const btn = document.getElementById('createEvBtn');
+          const msg = document.getElementById('createEvMsg');
+          btn.disabled = true;
+          btn.textContent = 'Đang khởi tạo...';
+
+          try {
+            const payload = {
+              title: document.getElementById('evTitle').value.trim(),
+              venue: document.getElementById('evVenue').value.trim(),
+              startTime: new Date(document.getElementById('evDate').value).toISOString(),
+              vipPrice: Number(document.getElementById('evVipPrice').value)
+            };
+
+            const res = await fetch(`${API_BASE}/api/v1/admin/events`, {
+              method: 'POST',
+              headers: window.PassPortalAuth.getAuthHeaders(),
+              body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            msg.style.display = 'block';
+            if (!res.ok) {
+              msg.style.color = '#ef4444';
+              msg.textContent = `❌ ${data.message || 'Không thể tạo sự kiện'}`;
+              return;
+            }
+
+            msg.style.color = '#4ade80';
+            msg.textContent = `✅ ${data.message}`;
+            document.getElementById('evTitle').value = '';
+            document.getElementById('evVenue').value = '';
+            await loadStats();
+          } catch {
+            msg.style.display = 'block';
+            msg.style.color = '#ef4444';
+            msg.textContent = '❌ Lỗi kết nối máy chủ.';
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Khởi tạo Sự kiện & Sơ đồ ghế';
+          }
+        }
+
+        async function handleCreateStaff(e) {
+          e.preventDefault();
+          const btn = document.getElementById('createStaffBtn');
+          const msg = document.getElementById('createStaffMsg');
+          btn.disabled = true;
+          btn.textContent = 'Đang cấp phát...';
+
+          try {
+            const payload = {
+              fullName: document.getElementById('staffFullName').value.trim(),
+              email: document.getElementById('staffEmail').value.trim(),
+              password: document.getElementById('staffPassword').value,
+              role: document.getElementById('staffRole').value
+            };
+
+            const res = await fetch(`${API_BASE}/api/v1/admin/users`, {
+              method: 'POST',
+              headers: window.PassPortalAuth.getAuthHeaders(),
+              body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            msg.style.display = 'block';
+            if (!res.ok) {
+              msg.style.color = '#ef4444';
+              msg.textContent = `❌ ${data.message || 'Không thể tạo tài khoản'}`;
+              return;
+            }
+
+            msg.style.color = '#4ade80';
+            msg.textContent = `✅ ${data.message}`;
+            document.getElementById('staffFullName').value = '';
+            document.getElementById('staffEmail').value = '';
+            document.getElementById('staffPassword').value = '';
+          } catch {
+            msg.style.display = 'block';
+            msg.style.color = '#ef4444';
+            msg.textContent = '❌ Lỗi kết nối máy chủ.';
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Cấp phát tài khoản nội bộ';
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

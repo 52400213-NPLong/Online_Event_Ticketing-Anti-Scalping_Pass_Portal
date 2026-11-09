@@ -12,4 +12,9 @@ public class Seat
     public SeatStatus Status { get; set; } = SeatStatus.Available;
     public string? HeldByUserId { get; set; }
     public DateTime? HoldExpiresAt { get; set; }
+
+    /// <summary>
+    /// Optimistic Concurrency Control token (SQL Server ROWVERSION - FR-14)
+    /// </summary>
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

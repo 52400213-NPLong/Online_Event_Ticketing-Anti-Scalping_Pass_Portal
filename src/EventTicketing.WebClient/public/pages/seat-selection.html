@@ -185,49 +185,7 @@
       </div>
     </footer>
 
-    <script>
-      const eventMap = {
-        'sunset-music-fest-2026': {
-          title: 'Sunset Music Fest 2026',
-          date: '18/12/2026',
-          ticketType: 'VIP',
-          price: '1.200.000đ',
-          serviceFee: '80.000đ',
-          total: '1.280.000đ',
-          seat: 'A4'
-        },
-        'jazz-night-live': {
-          title: 'Jazz Night Live',
-          date: '25/12/2026',
-          ticketType: 'Standard',
-          price: '890.000đ',
-          serviceFee: '60.000đ',
-          total: '950.000đ',
-          seat: 'B7'
-        },
-        'art-light-festival': {
-          title: 'Art & Light Festival',
-          date: '07/01/2027',
-          ticketType: 'Standard',
-          price: '650.000đ',
-          serviceFee: '50.000đ',
-          total: '700.000đ',
-          seat: 'C3'
-        }
-      };
-
-      const params = new URLSearchParams(window.location.search);
-      const eventKey = params.get('event') || 'sunset-music-fest-2026';
-      const selectedEvent = eventMap[eventKey] || eventMap['sunset-music-fest-2026'];
-
-      document.title = `${selectedEvent.title} | Pass Portal`;
-      document.querySelector('.muted').textContent = `${selectedEvent.title} • ${selectedEvent.date}`;
-      document.querySelectorAll('.summary-item strong')[0].textContent = selectedEvent.title;
-      document.querySelectorAll('.summary-item strong')[1].textContent = selectedEvent.seat;
-      document.querySelectorAll('.summary-item strong')[2].textContent = selectedEvent.ticketType;
-      document.querySelectorAll('.summary-item strong')[3].textContent = selectedEvent.price;
-      document.querySelectorAll('.summary-item strong')[4].textContent = selectedEvent.serviceFee;
-      document.querySelector('.summary-total span:last-child').textContent = selectedEvent.total;
-    </script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/seatmap.js"></script>
   </body>
 </html>

@@ -14,7 +14,15 @@ public class RateLimitingMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        // Chỉ giới hạn tần suất gọi trên các API endpoints (không chặn tải file giao diện tĩnh HTML/CSS/JS)
+        if (!context.Request.Path.StartsWithSegments("/api"))
+        {
+            await _next(context);
+            return;
+        }
+
         var clientId = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        bool isRateLimited = false;
 
         lock (RequestTracker)
         {
@@ -32,13 +40,20 @@ public class RateLimitingMiddleware
 
             if (windowRequests.Count >= _maxRequests)
             {
-                context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                context.Response.ContentType = "application/json";
-                context.Response.WriteAsJsonAsync(new { message = "Too many requests. Please try again later." });
-                return;
+                isRateLimited = true;
             }
+            else
+            {
+                windowRequests.Enqueue(now);
+            }
+        }
 
-            windowRequests.Enqueue(now);
+        if (isRateLimited)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsJsonAsync(new { message = "Too many requests (Anti-Bot Rate Limit). Please try again later." });
+            return;
         }
 
         await _next(context);
